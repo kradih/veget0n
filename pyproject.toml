@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "veget"
+version = "0.0.1"
+description = "Tool to do scraping in LinkedIn"
+authors = ["David Morán <david@dmoran.es>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+selenium = "^4.8.0"
+click = "^8.1.3"
+pyside6 = "^6.4.2"
+pyinstaller = "^5.8.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pillow = "^9.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
