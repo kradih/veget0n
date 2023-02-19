@@ -46,10 +46,44 @@ class LinkedIn:
         while True:
             sleep(self.sleep_time)
 
-            results: list[WebElement] = self.driver.find_elements(By.CLASS_NAME, "entity-result__item")
+            results: list[WebElement] = self.driver.find_elements(
+                By.CLASS_NAME, "entity-result__item")
             for entity in results:
-                links: list[WebElement] = entity.find_elements(By.CLASS_NAME, "app-aware-link")
-                profile_link_ = ProfileLink(links[1].text.split('\n')[0], links[1].get_attribute("href"))
+                try:
+                    name: str = entity.find_element(
+                        By.CSS_SELECTOR,
+                        "div:nth-of-type(2) > div > div > div > span > span > a > span > span"
+                    ).text
+                except NoSuchElementException:
+                    name = "LinkedIn Member"
+
+                try:
+                    position: str = entity.find_element(
+                        By.CSS_SELECTOR,
+                        "div:nth-of-type(2) > div > div:nth-of-type(2) > div"
+                    ).text.strip()
+                except NoSuchElementException:
+                    position = "Unknown"
+
+                try:
+                    location: str = entity.find_element(
+                        By.CSS_SELECTOR,
+                        "div:nth-of-type(2) > div > div:nth-of-type(2) > div:nth-of-type(2)"
+                    ).text.strip()
+                except NoSuchElementException:
+                    location = "Unknown"
+
+                url: str = entity.find_element(
+                    By.CSS_SELECTOR,
+                    "div:nth-of-type(2) > div > div > div > span > span > a"
+                ).get_attribute("href")
+
+                profile_link_ = ProfileLink(
+                    name,
+                    position,
+                    location,
+                    url
+                )
                 self.logger.info(f"Found profile: {profile_link_}")
                 profiles.append(profile_link_)
             try:

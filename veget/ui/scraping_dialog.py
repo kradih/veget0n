@@ -48,17 +48,28 @@ class ScrapingThread(QThread):
                     self.label.setText(f"Working on company {company}. Scraping profile '{profile_link.name}'")
                     profile = li.get_profile(profile_link)
                     self.console.log(f"Profile '{profile}')")
-                    for experience in profile.experiences:
-                        if company.lower() == experience.company.lower():
-                            csv_writer.writerow([
-                                company,
-                                profile_link.name,
-                                experience.position,
-                                experience.location,
-                                experience.start_date,
-                                experience.end_date
-                            ])
-                            f.flush()
+                    if profile.experiences:
+                        for experience in profile.experiences:
+                            if company.lower() == experience.company.lower():
+                                csv_writer.writerow([
+                                    company,
+                                    profile_link.name,
+                                    experience.position,
+                                    experience.location,
+                                    experience.start_date,
+                                    experience.end_date
+                                ])
+                                f.flush()
+                    else:
+                        csv_writer.writerow([
+                            company,
+                            profile_link.name,
+                            profile_link.position,
+                            profile_link.location,
+                            "Unknown",
+                            "Unknown"
+                        ])
+                        f.flush()
                     self.progress_bar.setValue(self.progress_bar.value() + step)
                 self.progress_bar.setValue((i + 1) * 100)
 
